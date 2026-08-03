@@ -196,6 +196,13 @@ t:active{background:#5AC8D826;}
 .fsb{flex:0 0 auto;width:34px;height:22px;border-radius:7px;background:var(--panel);
   border:1px solid var(--line2);color:var(--mut);font:inherit;font-size:12px;font-weight:700;line-height:1;}
 .fsb:active{filter:brightness(1.4);}
+.rfb{flex:0 0 auto;width:26px;height:22px;border-radius:7px;background:var(--panel);
+  border:1px solid var(--line2);color:var(--mut);display:flex;align-items:center;justify-content:center;padding:0;}
+.rfb:active{filter:brightness(1.4);}
+.rfb svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round;}
+.rfb.spin svg{animation:rf .6s linear;}
+@keyframes rf{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 .hrow{display:flex;align-items:center;gap:10px;margin:0 0 8px;}
 .hrow .bar{flex:1;}
 .nv{background:var(--lcd-bg);border:1px solid #4A340F;border-radius:8px;padding:2px 9px;
@@ -261,7 +268,9 @@ nav button.on{color:var(--acc);}
     <div class="cell"><div class="n" id="lStk">0</div><div class="l">연속</div></div>
     <div class="cell"><div class="n" id="lStg">1/12</div><div class="l">스테이지</div></div>
   </div>
-  <div class="hrow"><div class="bar"><i id="bar"></i></div><button class="fsb" id="fsb">가</button></div>
+  <div class="hrow"><div class="bar"><i id="bar"></i></div>
+    <button class="rfb" id="rfb" aria-label="새로고침" title="새로고침"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 10-1.6 5.6"/><path d="M20 5v6h-6"/></svg></button>
+    <button class="fsb" id="fsb">가</button></div>
  </div>
 </header>
 
@@ -388,6 +397,17 @@ function applyFs(){
 }
 document.getElementById("fsb").addEventListener("click",function(){
   S.fs=((S.fs||0)+1)%3;save();applyFs();
+});
+
+/* ─── 새로고침 ─── */
+document.getElementById("rfb").addEventListener("click",function(){
+  var b=this;
+  b.classList.remove("spin");void b.offsetWidth;b.classList.add("spin");
+  save();
+  var fresh=load();
+  if(fresh){S=fresh;if(!S.chk)S.chk={};if(!S.quiz)S.quiz={};if(!S.dates)S.dates={};if(!S.cur)S.cur=1;}
+  applyFs();today_();course();keys();gloss();num();prog();header();
+  window.scrollTo({top:0,behavior:"smooth"});
 });
 
 /* ─── 헤더 ─── */
